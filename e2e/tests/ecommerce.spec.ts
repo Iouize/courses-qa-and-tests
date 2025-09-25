@@ -47,4 +47,33 @@ test.describe("Ecommerce's product page", () => {
     await expect(page.getByRole("button", { name: " Add to cart" })).toBeVisible();
   });
 
+  test("should add a product to cart", async ({ page }) => {
+    await page.getByRole('link', { name: ' Cart' }).click();
+    expect(page).toHaveURL("https://automationexercise.com/view_cart");
+
+    const emptyCartMessage = page.locator('#empty_cart');
+
+    if (await emptyCartMessage.isVisible()) {
+      await page.getByRole('link', { name: 'here' }).click();
+
+      await page.locator('.nav.nav-pills.nav-justified > li > a').first().click();
+
+      await page.getByRole('button', { name: ' Add to cart' }).click();
+
+      await page.getByRole('link', { name: 'View Cart' }).click();
+    }
+
+    await expect(page.locator('#cart_info')).toBeVisible();
+
+    const rows = await page.$$('table tbody tr');
+    expect(rows.length).toBeGreaterThan(0);
+
+    await expect(page.getByRole('cell', { name: 'Product Image' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Blue Top Women > Tops' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Rs.' }).first()).toBeVisible();
+    await expect(page.getByRole('cell', { name: '1' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Rs.' }).nth(1)).toBeVisible();
+    await expect(page.getByRole('cell', { name: '' })).toBeVisible();
+
+  });
 });
