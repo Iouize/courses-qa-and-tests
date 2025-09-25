@@ -47,4 +47,18 @@ describe("User Service", () => {
       expect(e.statusCode).toBe(400);
     }
   });
+
+  it("should trigger an error when user is too young", async () => {
+    try {
+      await createUser({
+        name: "Johnny",
+        birthday: new Date(), // today
+      });
+      assert.fail("createUser should have thrown an error");
+    } catch (e) {
+      expect(e.name).toBe("HttpForbidden");
+      expect(e.statusCode).toBe(403);
+      expect(e.message).toBe("User is too young.");
+    }
+  })
 });
