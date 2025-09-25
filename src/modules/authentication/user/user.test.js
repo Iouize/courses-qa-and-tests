@@ -1,4 +1,4 @@
-import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, assert, describe, expect, it, vi } from "vitest";
 import { createUser } from "./user.service.js";
 import { createUserInRepository } from "./user.repository.js";
 
@@ -34,5 +34,17 @@ describe("User Service", () => {
       name: "John Doe",
       birthday: new Date(1990,1,1),
     });
+  });
+
+  it("should trigger a bad request error when user creation", async () => {
+    try {
+      await createUser({
+        name: "Johnny",
+      });
+      assert.fail("createUser should have thrown an error");
+    } catch (e) {
+      expect(e.name).toBe("HttpBadRequest");
+      expect(e.statusCode).toBe(400);
+    }
   });
 });
