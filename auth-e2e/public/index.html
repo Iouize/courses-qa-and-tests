@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Inscription</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Créer un compte</h1>
+  <form id="signup-form" action="/signup" method="POST">
+    <label>Nom d'utilisateur</label>
+    <input type="text" name="username"><br>
+
+    <label>Email</label>
+    <input type="text" name="email"><br>
+
+    <label>Mot de passe</label>
+    <input type="password" name="password"><br>
+
+    <button type="submit">S'inscrire</button>
+  </form>
+  <p id="message"></p>
+
+  <script>
+    const form = document.getElementById("signup-form");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch("/signup", {
+        method: "POST",
+        body: new URLSearchParams(formData),
+      });
+
+      const text = await response.text();
+      message.textContent = text;
+      message.style.color = response.ok ? "green" : "red";
+    });
+  </script>
+</body>
+</html>
